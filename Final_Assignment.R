@@ -1,7 +1,3 @@
-setwd("C:/Users/arian/Desktop/EKPA/R/final_assignment/option2")
-dat = read.table("League of Legents Champion Stats 13.3.data",sep=";" , header = T)
-
-
 setwd("C:/Users/arian/Desktop/EKPA/R/final_assignment/option1")
 dat = read.table("breast-cancer-wisconsin.data",sep="," , header = F)
 #summary(dat)
