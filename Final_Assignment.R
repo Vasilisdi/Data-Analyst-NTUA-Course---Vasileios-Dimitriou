@@ -1,7 +1,11 @@
+setwd("C:/Users/arian/Desktop/EKPA/R/final_assignment/option2")
+dat = read.table("League of Legents Champion Stats 13.3.data",sep=";" , header = T)
+
+
 setwd("C:/Users/arian/Desktop/EKPA/R/final_assignment/option1")
 dat = read.table("breast-cancer-wisconsin.data",sep="," , header = F)
 #summary(dat)
-colnames(dat) = c("Sampldate code number","Clump Thickness","Uniformity of Cell Size","Uniformity of Cell Shape" , "Marginal Adhesion" , "Single Epithelial Cell Size" , "Bare Nuclei" , "Bland Chromatin" , "Normal Nucleoli" , "Mitoses " , "Class" )
+colnames(dat) = c("Sampldate_code_number","Clump_Thickness","Uniformity_of_Cell_Size","Uniformity_of_Cell_Shape" , "Marginal_Adhesion" , "Single_Epithelial_Cell_Size" , "Bare_Nuclei" , "Bland_Chromatin" , "Normal_Nucleoli" , "Mitoses " , "Class" )
 summary(dat)
 
 str(dat) #report of the dataframe observations
@@ -47,4 +51,31 @@ k_cl=kmeans(pmatrix,3)
 #Comparison of kmean and Hclust with 3 clusters
 table(groups,k_cl$cluster)
 
+#########################################################
+#Tree model initialization
+#The purpose is to predict how dangerous an instance is
+#meaning if it is benigh or malignant, based on the 
+#info that we have from the other columns
+library(rpart)
+library(rattle)
+library(rpart.plot)
+
+tree_model <- rpart(Class~ . , data=dat[,2:11] , method="anova")
+summary(tree_model)
+plot(tree_model)
+text(tree_model)
+fancyRpartPlot(tree_model)
+
+#check tree model
+#Predicting some Class values and checking them
+res <- predict(tree_model,dat[600:699,2:10])
+view(cbind(dat[600:699,11],res))
+
+###########################################################
+#Regression Model
+modelreg=lm(dat$Class~dat$Mitoses +dat$Uniformity_of_Cell_Size + dat$Bare_Nuclei +dat$Clump_Thickness)
+summary(modelreg)
+
+p=predict(modelreg,as.data.frame(dat$Mitoses +dat$Uniformity_of_Cell_Size + dat$Bare_Nuclei +dat$Clump_Thickness))
+rbind(dat$Class,p)
 
