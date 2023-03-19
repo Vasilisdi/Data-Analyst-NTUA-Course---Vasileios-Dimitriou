@@ -1,6 +1,9 @@
 setwd("C:/Users/arian/Desktop/EKPA/R/final_assignment/option2")
 dat = read.table("League of Legents Champion Stats 13.3.data",sep=";" , header = T)
 
+library(rpart)
+library(rattle)
+library(rpart.plot)
 
 setwd("C:/Users/arian/Desktop/EKPA/R/final_assignment/option1")
 dat = read.table("breast-cancer-wisconsin.data",sep="," , header = F)
@@ -24,6 +27,7 @@ d3=dist(pmatrix,upper = TRUE, diag = TRUE)
 #Hierarchical clustering
 c = hclust(d, method="ward.D2")
 
+#The following to not be considered.
 totwins=c()
 for (k in 2:10) {
 k_c1=kmeans(pmatrix,k)
@@ -49,12 +53,14 @@ table(dat$Class,groups)
 plot(c)
 rect.hclust(c,k=2)
 groups <- cutree(c,k=2)
+table(dat$Class,groups)
 
 #k-means clustering
 k_cl=kmeans(pmatrix,2)
 
 #Comparison of kmeans with real class cases
 table(dat$Class,k_cl$cluster)
+view(cbind(dat$Class,2*k_cl$cluster))
 
 #Comparison of kmeans and Hclust with 2 clusters
 #We can notice that they have slight differences
@@ -68,15 +74,16 @@ table(groups,k_cl$cluster)
 #The purpose is to predict how dangerous an instance is
 #meaning if it is benigh or malignant, based on the 
 #info that we have from the other columns
-library(rpart)
-library(rattle)
-library(rpart.plot)
+
 
 #Turn Class into categorical var
+#Before I make use of this I store it
+#in another value so as to make use of it later on
+datClass=dat$Class
 dat$Class <- as.factor(dat$Class)
 str(dat)
 
-tree_model <- rpart(Class~ . , data=dat[,2:11] , method="anova")
+tree_model <- rpart(Class~ . , data=dat[1:599,2:11] , method="anova")
 summary(tree_model)
 plot(tree_model)
 text(tree_model)
@@ -89,24 +96,50 @@ res <- predict(tree_model,dat[600:699,2:10])
 #Processing the p float value in order to make it being able to take 2 categorical values
 res1 = c()
 for (i in 1:length(res)){res1[i]=round(res[i], digits = 0)}
-view(cbind(dat[600:699,11],res1))
+view(cbind(2*as.numeric(dat[600:699,11]),2*res1))
+table(2*as.numeric(dat[600:699,11]),res1)
 #Note that instead of having 2 and 4 we have 1 and 2 indicating these
 #two categorical values.
 #We can tell that the model misses only couple of cells.
 
-
-###########################################################
+############################################################
 #Regression Model
-modelreg=lm(dat$Class~dat$Mitoses +dat$Uniformity_of_Cell_Size + dat$Bare_Nuclei +dat$Clump_Thickness)
+#Takes into consideration all domains - whole data
+modelreg=lm(Class~dat$Mitoses +dat$Uniformity_of_Cell_Size + dat$Bare_Nuclei +dat$Clump_Thickness)
+modelreg=lm(datClass~.,data=dat)
 summary(modelreg)
 
 #It is ok if included data.frame(x=X_new) - X_new extra values for prediction by model.
 #In essence p are the predicted values for the dat input
-p=predict(modelreg,as.data.frame(dat))
+p=predict(modelreg,  data.frame(x = dat))
 
 #Processing the p float value in order to make it being able to take 2 categorical values
 p1 = c()
 for (i in 1:length(p)){p1[i]=round(p[i], digits = 0)}
-rbind(dat[1:699,]$Class,p1[1:699])
-view(cbind(dat[600:699,11],p1[600:699]))
+rbind(dat[600:699,]$Class,p1)
+view(cbind(read_data=2*as.numeric(dat[600:699,11]),prediction=p1))
+table(2*as.numeric(dat[600:699,11]),p1[600:699])
+#We can tell that the model misses only couple of cells.
+
+
+
+###########################################################
+#Failed - couldnt make it work like - very bad convergion because considers only 1 domain
+#Regression Model
+#modelreg=lm(datClass~dat$Mitoses +dat$Uniformity_of_Cell_Size + dat$Bare_Nuclei +dat$Clump_Thickness)
+#modelreg <- lm(datClass[1:599]~dat$Mitoses [1:599] +dat$Uniformity_of_Cell_Size[1:599] + dat$Bare_Nuclei[1:599] +dat$Bland_Chromatin[1:599] +dat$Clump_Thickness[1:599] + dat$Normal_Nucleoli[1:599] + dat$Single_Epithelial_Cell_Size[1:599] + dat$Marginal_Adhesion[1:599] + dat$Uniformity_of_Cell_Shape[1:599])
+x <- dat$Uniformity_of_Cell_Size[1:599]
+modelreg <- lm(datClass[1:599]~ x  )
+summary(modelreg)
+
+#It is ok if included data.frame(x=X_new) - X_new extra values for prediction by model.
+#In essence p are the predicted values for the dat input
+p=predict(modelreg,  data.frame(x = dat$Uniformity_of_Cell_Size[1:599]))
+
+#Processing the p float value in order to make it being able to take 2 categorical values
+p1 = c()
+for (i in 1:length(p)){p1[i]=round(p[i], digits = 0)}
+rbind(dat[600:699,]$Class,p1)
+view(cbind(read_data=2*as.numeric(dat[600:699,11]),prediction=p1))
+table(2*as.numeric(dat[600:699,11]),p1)
 #We can tell that the model misses only couple of cells.
