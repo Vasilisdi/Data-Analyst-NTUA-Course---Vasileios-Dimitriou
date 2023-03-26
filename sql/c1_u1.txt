@@ -1,0 +1,45 @@
+CREATE DATABASE company;
+
+use company;
+CREATE TABLE employee(
+ employee_id MEDIUMINT NOT NULL AUTO_INCREMENT,
+ first_name VARCHAR(40) NOT NULL,
+ last_name VARCHAR(40) NOT NULL,
+ email VARCHAR(40) NOT NULL,
+ phone VARCHAR(40) NOT NULL,
+ PRIMARY KEY(employee_id) 
+);
+
+use company;
+CREATE TABLE project (
+project_id MEDIUMINT NOT NULL AUTO_INCREMENT,
+deadline DATE NOT NULL,
+employee_id MEDIUMINT NOT NULL ,
+PRIMARY KEY(project_id),
+ FOREIGN KEY (employee_id) REFERENCES employee(employee_id)
+); 
+
+use company;
+INSERT INTO employee VALUES (NULL,"empl_name1","employee_sur1","one@rmail.com","21331245459");
+INSERT INTO employee VALUES (NULL,"empl_name2","employee_sur2","two@rmail.com","21332424459");
+INSERT INTO employee VALUES (NULL,"empl_name3","employee_sur3","three@rmail.com","21234584459");
+INSERT INTO employee VALUES (NULL,"empl_name4","employee_sur4","four@rmail.com","21785684459");
+INSERT INTO employee VALUES (NULL,"empl_name5","employee_sur5","five@rmail.com","21334354459");
+INSERT INTO employee VALUES (NULL,"empl_name6","employee_sur6","six@rmail.com","21345884459");
+INSERT INTO employee VALUES (NULL,"empl_name7","employee_sur7","seven@rmail.com","21336834539");
+INSERT INTO employee VALUES (NULL,"empl_name8","employee_sur8","height@rmail.com","21336884459");
+INSERT INTO employee VALUES (NULL,"empl_name9","employee_sur9","nine@rmail.com","21336835559");
+INSERT INTO employee VALUES (NULL,"empl_name10","employee_sur10","ten@rmail.com","21336345459");
+
+
+use company;
+INSERT INTO project VALUES (NULL,"2018-11-27",1);
+INSERT INTO project VALUES (NULL,"2018-11-27",2);
+INSERT INTO project VALUES (NULL,"2018-11-27",3);
+INSERT INTO project VALUES (NULL,"2018-11-27",4);
+INSERT INTO project VALUES (NULL,"2018-11-27",5);
+INSERT INTO project VALUES (NULL,"2018-11-27",6);
+INSERT INTO project VALUES (NULL,"2018-11-27",7);
+INSERT INTO project VALUES (NULL,"2018-11-27",8);
+INSERT INTO project VALUES (NULL,"2018-11-27",9);
+INSERT INTO project VALUES (NULL,"2018-11-27",10);

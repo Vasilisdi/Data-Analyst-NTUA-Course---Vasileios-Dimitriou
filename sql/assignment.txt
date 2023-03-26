@@ -1,0 +1,47 @@
+CREATE DATABASE my_DB;
+
+use  my_DB;
+CREATE TABLE  customers(
+ customer_id MEDIUMINT NOT NULL AUTO_INCREMENT,
+ first_name VARCHAR(40) NOT NULL,
+ last_name VARCHAR(40) NOT NULL,
+ age TINYINT UNSIGNED,
+ PRIMARY KEY(customer_id) 
+);
+
+use my_DB;
+INSERT INTO customers VALUES (NULL,"Vasilis","Dimitriou",28);
+INSERT INTO customers VALUES (NULL,"Labriana","Dimitriou",29);
+INSERT INTO customers VALUES (NULL,"Giorgos","Xafis",24);
+INSERT INTO customers VALUES (NULL,"Vasilis","Xafis",21);
+INSERT INTO customers  VALUES (NULL,"Vasilis","Karabaglidis",81);
+INSERT INTO customers VALUES (NULL,"Dimitris","Pavlidis",77);
+
+
+
+use my_DB;
+CREATE TABLE products(
+product_id MEDIUMINT NOT NULL AUTO_INCREMENT,
+product_code VARCHAR(40) NOT NULL,
+customer_id  MEDIUMINT REFERENCES customers(customer_id),
+first_name VARCHAR(40) REFERENCES customers(first_name),
+last_name VARCHAR(40) REFERENCES customers(last_name),
+PRIMARY KEY(product_id)
+); 
+
+
+INSERT INTO my_DB.products (product_id, product_code, customer_id)  VALUES (NULL,"21413241",14);
+INSERT INTO my_DB.products (product_id, product_code, customer_id) VALUES (NULL,"15115128",1);
+INSERT INTO my_DB.products (product_id, product_code, customer_id) VALUES (NULL,"124141512",2);
+INSERT INTO my_DB.products (product_id, product_code, customer_id) VALUES (NULL,"213141512",1);
+INSERT INTO my_DB.products (product_id, product_code, customer_id) VALUES (NULL,"213124151",3);
+INSERT INTO my_DB.products (product_id, product_code, customer_id) VALUES (NULL,"213124516",4);
+INSERT INTO my_DB.products (product_id, product_code, customer_id) VALUES (NULL,"123124151",4);
+INSERT INTO my_DB.products (product_id, product_code, customer_id) VALUES (NULL,"124151618",6);
+
+UPDATE my_DB.products  
+SET first_name=(SELECT first_name from customers  where products.customer_id= customers.customer_id) ;
+
+UPDATE my_DB.products
+SET last_name=(SELECT last_name from customers  where products.customer_id= customers.customer_id) ;
+

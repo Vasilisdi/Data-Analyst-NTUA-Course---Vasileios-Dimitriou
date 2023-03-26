@@ -1,0 +1,26 @@
+CREATE DATABASE crupto;
+
+use crypto;
+CREATE TABLE customer (
+	customer_id MEDIUMINT NOT NULL AUTO_INCREMENT,
+    first_name VARBINARY(70) NOT NULL,
+    last_name VARBINARY(70) NOT NULL,
+    password1 VARCHAR(40) NOT NULL,
+    PRIMARY KEY(customer_id)
+);
+
+use crypto;
+INSERT INTO customer(customer_id, first_name, last_name, password1) VALUES (NULL, AES_ENCRYPT('Maria','crypto_20'), AES_ENCRYPT('Papadopoulou','crypto_20'), SHA2('sdk_2539',224));
+INSERT INTO customer(customer_id, first_name, last_name, password1) VALUES (NULL, AES_ENCRYPT('Kostas','crypto_20'), AES_ENCRYPT('Georgiou','crypto_20'), SHA2('sdk_2539',224));
+INSERT INTO customer(customer_id, first_name, last_name, password1) VALUES (NULL, AES_ENCRYPT('Despoina','crypto_20'), AES_ENCRYPT('Papadopoulou','crypto_20'), SHA2('sdk_2539',224));
+INSERT INTO customer(customer_id, first_name, last_name, password1) VALUES (NULL, AES_ENCRYPT('Nikos','crypto_20'), AES_ENCRYPT('Damianos','crypto_20'), SHA2('sdk_2539',224));
+INSERT INTO customer(customer_id, first_name, last_name, password1) VALUES (NULL, AES_ENCRYPT('Panagiotis','crypto_20'), AES_ENCRYPT('Xalkias','crypto_20'), SHA2('sdk_2539',224));
+INSERT INTO customer(customer_id, first_name, last_name, password1) VALUES (NULL, AES_ENCRYPT('Kostas','crypto_20'), AES_ENCRYPT('Kalos','crypto_20'), SHA2('sdk_2539',224));
+INSERT INTO customer(customer_id, first_name, last_name, password1) VALUES (NULL, AES_ENCRYPT('Dimitris','crypto_20'), AES_ENCRYPT('Dimitriou','crypto_20'), SHA2('sdk_2539',224));
+INSERT INTO customer(customer_id, first_name, last_name, password1) VALUES (NULL, AES_ENCRYPT('Lampros','crypto_20'), AES_ENCRYPT('Konstas','crypto_20'), SHA2('sdk_2539',224));
+INSERT INTO customer(customer_id, first_name, last_name, password1) VALUES (NULL, AES_ENCRYPT('Aliki','crypto_20'), AES_ENCRYPT('Papagianni','crypto_20'), SHA2('sdk_2539',224));
+INSERT INTO customer(customer_id, first_name, last_name, password1) VALUES (NULL, AES_ENCRYPT('Maria','crypto_20'), AES_ENCRYPT('Floraki','crypto_20'), SHA2('sdk_2539',224));
+
+use crypto;
+SELECT customer_id, CAST(AES_DECRYPT(first_name, 'crypto_20') AS CHAR(50)) last_name_decrypt, password1
+FROM customer;
